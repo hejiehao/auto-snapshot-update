@@ -4,6 +4,10 @@ from utils.open_json import *
 import requests
 import logging
 import logging.handlers
+import os
+
+if os.path.exists("./discord.log"):
+    os.remove("./discord.log")
 
 #Set up logging
 logger = logging.getLogger('discord')
