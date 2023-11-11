@@ -2,6 +2,24 @@ import discord
 from discord import app_commands
 from utils.open_json import *
 import requests
+import logging
+import logging.handlers
+
+#Set up logging
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+logging.getLogger('discord.http').setLevel(logging.INFO)
+
+handler = logging.handlers.RotatingFileHandler(
+    filename='discord.log',
+    encoding='utf-8',
+    maxBytes=32 * 1024 * 1024,  # 32 MiB
+    backupCount=5,  # Rotate through 5 files
+)
+dt_fmt = '%Y-%m-%d %H:%M:%S'
+formatter = logging.Formatter('[{asctime}] [{levelname:<8}] {name}: {message}', dt_fmt, style='{')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 # open config.json
 config = open_json('./config/config.json')
@@ -45,4 +63,4 @@ async def new(interaction: discord.Interaction):
     newest = requests.get("https://github.com/burningtnt/HMCL-Snapshot-Update/raw/master/datas/snapshot.json")
     await interaction.response.send_message(f"最新的版本为：{newest.json()['version']}\n下载链接：{newest.json()['jar']}")
 
-client.run(config['token'])
+client.run(config['token'], log_handler=None)
