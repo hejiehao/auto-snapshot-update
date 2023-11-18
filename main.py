@@ -55,6 +55,8 @@ async def on_ready():
 async def new(interaction: discord.Interaction):
     """Get the newest version"""
     newest = requests.get("https://github.com/burningtnt/HMCL-Snapshot-Update/raw/master/datas/snapshot.json")
-    await interaction.response.send_message(f"最新的版本为：{newest.json()['version']}\n下载链接：{newest.json()['jar']}\nGitHub Commit：https://github.com/huanghongxun/HMCL/commit/{newest.json()['version'][8:]}")
+    await interaction.response.send_message(f"""最新的版本为：{newest.json()['version']}
+下载链接：{newest.json()['jar']}
+GitHub Commit：https://github.com/huanghongxun/HMCL/commit/{newest.json()['version'][8:]}""")
 
 client.run(config['token'], log_handler=None)
