@@ -9,7 +9,7 @@ import os
 if os.path.exists("./discord.log"):
     os.remove("./discord.log")
 
-#Set up logging
+# Set up logging
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)
 logging.getLogger('discord.http').setLevel(logging.INFO)
@@ -28,8 +28,6 @@ logger.addHandler(handler)
 # open config.json
 config = open_json('./config/config.json')
 
-MY_GUILD = discord.Object(id=config['guild_id'])  # replace with your guild id
-
 class MyClient(discord.Client):
     def __init__(self, *, intents: discord.Intents):
         super().__init__(intents=intents)
@@ -41,14 +39,6 @@ class MyClient(discord.Client):
         # Note: When using commands.Bot instead of discord.Client, the bot will
         # maintain its own tree instead.
         self.tree = app_commands.CommandTree(self)
-
-    # In this basic example, we just synchronize the app commands to one guild.
-    # Instead of specifying a guild to every command, we copy over our global commands instead.
-    # By doing so, we don't have to wait up to an hour until they are shown to the end-user.
-    async def setup_hook(self):
-        # This copies the global commands over to your guild.
-        self.tree.copy_global_to(guild=MY_GUILD)
-        await self.tree.sync(guild=MY_GUILD)
 
 
 intents = discord.Intents.default()
@@ -65,6 +55,6 @@ async def on_ready():
 async def new(interaction: discord.Interaction):
     """Get the newest version"""
     newest = requests.get("https://github.com/burningtnt/HMCL-Snapshot-Update/raw/master/datas/snapshot.json")
-    await interaction.response.send_message(f"最新的版本为：{newest.json()['version']}\n下载链接：{newest.json()['jar']}")
+    await interaction.response.send_message(f"最新的版本为：{newest.json()['version']}\n下载链接：{newest.json()['jar']}\nGitHub Commit：https://github.com/huanghongxun/HMCL/commit/{newest.json()['version'][8:]}")
 
 client.run(config['token'], log_handler=None)
